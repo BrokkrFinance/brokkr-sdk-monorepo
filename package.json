@@ -1,0 +1,25 @@
+{
+  "name": "brokkr-sdk-monorepo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Brokkr Finance",
+  "workspaces": ["packages/*", "examples/*"],
+  "devDependencies": {
+    "eslint": "^8.16.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^12.4.2",
+    "pinst": "^3.0.0",
+    "prettier": "latest",
+    "turbo": "latest"
+  },
+  "engines": {
+    "npm": ">=7.0.0",
+    "node": ">=14.0.0"
+  },
+  "license": "ISC"
+}
