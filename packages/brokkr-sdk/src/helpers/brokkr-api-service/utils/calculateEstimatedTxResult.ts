@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { InvestMode } from "../types";
+import { InvestMode } from "../../../types";
 
 export function calculateEstimatedTxResult(
   transactionInfo: any,

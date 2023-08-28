@@ -1,14 +1,14 @@
 import { BigNumberish, Contract, ethers } from "ethers";
-import { Asset } from "../crypto-asset";
-import { ERC20ABI } from "../abi/erc20";
-import { Chain, QueryParams } from "../types";
-import { DEFAULT_DECIMALS } from "../config";
-import { convertBigNumberToNumber } from "../utils";
-import { ChainToChainId } from "../constants";
+import { Asset } from "../crypto-asset/Asset";
+import { ERC20ABI } from "../../constants/abi/erc20";
+import { Chain, QueryParams } from "../../types";
+import { DEFAULT_DECIMALS } from "../../constants/configs";
+import { convertBigNumberToNumber, getDefaultRpcUrl } from "../../utils";
+import { ChainToChainId } from "../../constants/configs";
 
 export interface ProviderHelperConfig {
   chain: Chain;
-  rpcUrl: string;
+  rpcUrl?: string;
 }
 
 export class ProviderHelper {
@@ -16,7 +16,8 @@ export class ProviderHelper {
   readonly chain: Chain;
 
   constructor({ chain, rpcUrl }: ProviderHelperConfig) {
-    this.provider = new ethers.providers.JsonRpcProvider(rpcUrl);
+    const jsonRpcProviderUrl = rpcUrl ?? getDefaultRpcUrl(chain);
+    this.provider = new ethers.providers.JsonRpcProvider(jsonRpcProviderUrl);
     this.chain = chain;
   }
 
@@ -83,8 +84,6 @@ export class ProviderHelper {
 
     return convertBigNumberToNumber(gasLimit);
   }
-
-  // create tx
 
   private async fetchNativeAssetBalance(userAddress: string): Promise<number> {
     const balance: BigNumberish = await this.provider.getBalance(userAddress);

@@ -1,4 +1,5 @@
-import { Chain } from "../types";
+import { BROKKR_CDN_URL } from "../../constants/configs";
+import { Chain } from "../../types";
 
 export class Asset {
   readonly ticker: string;
@@ -20,6 +21,7 @@ export class Asset {
   }
 
   public get iconUrl(): string {
-    return `https://brokkr.finance/${this.ticker}`;
+    const imageName = (this.ticker.split(".")[0]).toUpperCase();
+    return `${BROKKR_CDN_URL}/${imageName}`;
   }
 }

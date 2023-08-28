@@ -1,5 +1,5 @@
-import { ContractInterface } from "ethers";
-import { Asset } from "./crypto-asset";
+import { ContractInterface, ethers } from "ethers";
+import { Asset } from "./helpers";
 
 export enum Chain {
   AVALANCHE = 'avalanche',
@@ -17,7 +17,9 @@ export enum PortfolioType {
 export type InvestMode = "deposit" | "withdraw";
 
 export interface BrokkrSdkConfig {
-  publicNodeUrl: string;
+  apiKey: string;
+  chain: Chain;
+  publicNodeUrl?: string;
 };
 
 export interface QueryParams {
@@ -27,18 +29,9 @@ export interface QueryParams {
   funcParams: unknown[];
 }
 
-export interface TxInfo {
-  portfolioAddress: string;
-  inputAmount: number;
-  investMode: InvestMode;
-  inputToken: Asset;
-  outputToken: Asset;
-  portfolioType: PortfolioType;
-}
-
 export type PriceTimeRangeData = [number, number][];
 
-export interface PortfolioInformation {
+export interface PortfolioInformationResponse {
   userFriendlyName: string;
   address: string;
   apy: number;
@@ -52,7 +45,7 @@ export interface PortfolioInformation {
   };
   priceChange?: Record<TimeRange, string>;
   isPaused: boolean;
-  audits: Audit[];
+  audits: Array<{ auditorName: string, url: string }>;
   positions: Position[];
   description: string;
   slogan: string;
@@ -67,9 +60,12 @@ export interface PortfolioInformation {
   startDateTimestamp: number;
 }
 
-export interface Audit {
-  auditorName: string;
-  url: string;
+export interface PortfolioInformation extends PortfolioInformationResponse {
+  portfolioIconUrl: string;
+  audits: Array<{ auditorName: string, url: string, iconUrl: string }>;
+  withdrawalToken: Asset[];
+  requiredDepositToken: Asset[];
+  portfolioToken: Asset;
 }
 
 export interface Position {
@@ -93,7 +89,7 @@ export interface EstimatePortfolioContractResultInput {
   investMode: InvestMode;
 }
 
-export interface OverallUserInvestmentMetricsResponse {
+export interface OverallUserInvestmentMetrics {
   totalPortfoliosValue: {
     amount: string;
     ticker: string;
@@ -122,3 +118,12 @@ export interface UserPortfolioHolding {
   holdings: TokenHolding[];
   positions?: PositionData[];
 }
+
+export interface TransactionInfo {
+  contractAddress: string;
+  functionName: string;
+  functionParams: any[];
+  abi: ethers.ContractInterface;
+}
+
+export type DCAInvestmentPeriod = '4' | '12' | '26' | '52';
