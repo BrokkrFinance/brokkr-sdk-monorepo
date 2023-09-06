@@ -1,7 +1,7 @@
 {
   "name": "brokkr-sdk",
   "private": false,
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "module",
   "homepage": "https://github.com/BrokkrFinance/brokkr-sdk-monorepo/tree/main/packages/brokkr-sdk",
   "repository": {
@@ -25,14 +25,14 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/index.umd.js",
+  "main": "./dist/index.cjs.js",
   "module": "./dist/index.es.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.es.js",
-      "require": "./dist/index.umd.js"
+      "require": "./dist/index.cjs.js"
     }
   }
 }
