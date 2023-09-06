@@ -9,10 +9,19 @@ const userAddress = '0x4821fCb59f13376eDd7bC82f6eE37785F3A7AB66';
 export default function TokenIssuingPortfolio() {
     const { chain, portfolioAddress } = useParams();
     const [portfolioService, setPortfolioService] = useState<BrokkrTokenIssuingService>();
+
     const [isDataLoading, setIsDataLoading] = useState(false);
     const [portfolioData, setPortfolioData] = useState<PortfolioInformation>();
-    const [assetBalance, setAssetBalance] = useState(0);
-    const [inputNumber, setInputNumber] = useState(0);
+
+    const [isBalanceLoading, setIsBalanceLoading] = useState(false);
+    const [investingAssetBalance, setInvestingAssetBalance] = useState(0);
+    const [portfolioAssetBalance, setPortfolioAssetBalance] = useState(0);
+
+    const [investInputNumber, setInvestInputNumber] = useState(0);
+    const [withdrawInputNumber, setWithdrawInputNumber] = useState(0);
+
+    const investingAsset = portfolioData?.requiredDepositToken[0];
+    const portfolioAsset = portfolioData?.portfolioToken;
 
     useEffect(() => {
         if (chain && portfolioAddress) {
@@ -36,37 +45,41 @@ export default function TokenIssuingPortfolio() {
     useEffect(() => {
         async function fetchaBalance() {
             const brokkrSDK = new BrokkrClientSdk(BROKKR_SDK_CONFIG);
-            // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-            const balance = await brokkrSDK.user?.fetchBalance(userAddress, portfolioData?.requiredDepositToken[0]!);
-            setAssetBalance(balance);
+            
+            if(!investingAsset || !portfolioAsset) return;
+
+            const investBalance = await brokkrSDK.user?.fetchBalance(userAddress, investingAsset);
+            const portfolioBalance = await brokkrSDK.user?.fetchBalance(userAddress, portfolioAsset);
+
+            setInvestingAssetBalance(investBalance);
+            setPortfolioAssetBalance(portfolioBalance);
         }
 
         if (portfolioData) {
             fetchaBalance();
         }
-    }, [portfolioData])
+    }, [investingAsset, portfolioData, portfolioAsset])
 
     async function handleInvest() {
-        console.log({
-            userAddress,
-            spendingAmount: inputNumber,
-            spendingAsset: portfolioData?.requiredDepositToken[0] as Asset,
-            receivingAsset: portfolioData?.portfolioToken as Asset,
-
-        })
         if (portfolioService) {
             const res = await portfolioService.invest({
                 userAddress,
-                spendingAmount: inputNumber,
+                spendingAmount: investInputNumber,
                 spendingAsset: portfolioData?.requiredDepositToken[0] as Asset,
                 receivingAsset: portfolioData?.portfolioToken as Asset,
             });
-            // const res = await portfolioService.withdraw({
-            //     userAddress,
-            //     spendingAmount: inputNumber,
-            //     receivingAsset: portfolioData?.requiredDepositToken[0] as Asset,
-            //     spendingAsset: portfolioData?.portfolioToken as Asset,
-            // });
+            console.log(res);
+        }
+    }
+
+    async function handleWithdraw() {
+        if (portfolioService) {
+            const res = await portfolioService.withdraw({
+                userAddress,
+                spendingAmount: withdrawInputNumber,
+                receivingAsset: portfolioData?.requiredDepositToken[0] as Asset,
+                spendingAsset: portfolioData?.portfolioToken as Asset,
+            });
             console.log(res);
         }
     }
@@ -87,25 +100,47 @@ export default function TokenIssuingPortfolio() {
                         <Typography variant='body1'>{portfolioData?.slogan}</Typography>
 
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12}>
                         <Typography variant='subtitle1' textAlign={"justify"}>
                             {portfolioData?.description}
                         </Typography>
                     </Grid>
                     <Grid item xs={6}>
+                        <Typography variant='h6'>Invest</Typography>
                         <Box mt={5}>
                             <FormControl fullWidth>
-                                <Typography>balance: {assetBalance}</Typography>
+                                <Typography>balance: {investingAssetBalance} {investingAsset?.ticker}</Typography>
                                 <TextField
                                     type='number'
                                     color='secondary'
                                     sx={{ marginTop: "15px" }}
-                                    label="input"
+                                    label="Amount"
                                     variant="outlined"
-                                    onChange={(e) => setInputNumber(Number(e.target.value))}
+                                    defaultValue={0}
+                                    onChange={(e) => setInvestInputNumber(Number(e.target.value))}
                                 />
                                 <Button onClick={handleInvest} variant="contained" sx={{ marginTop: "15px" }} size="large" color="success">
                                     Invest
+                                </Button>
+                            </FormControl>
+                        </Box>
+                    </Grid>
+
+                    <Grid item xs={6}>
+                        <Typography variant='h6'>Withdraw</Typography>
+                        <Box mt={5}>
+                            <FormControl fullWidth>
+                                <Typography>balance: {portfolioAssetBalance} {portfolioAsset?.ticker}</Typography>
+                                <TextField
+                                    type='number'
+                                    color='secondary'
+                                    sx={{ marginTop: "15px" }}
+                                    label="Amount"
+                                    variant="outlined"
+                                    onChange={(e) => setWithdrawInputNumber(Number(e.target.value))}
+                                />
+                                <Button onClick={handleWithdraw} variant="contained" sx={{ marginTop: "15px" }} size="large" color="success">
+                                    Withdraw    
                                 </Button>
                             </FormControl>
                         </Box>
