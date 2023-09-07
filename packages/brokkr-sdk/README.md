@@ -4,11 +4,13 @@ This SDK provides some functionality to make it easier to use brokkr strategies 
 With this SDK you can fetch the information about portfolios, user holdings, and detail on invest and withdraw in a portfolio.
 
 To install the package:
+
 ```npm install brokkr-sdk```
 or
+
 ```yarn add brokkr-sdk```
 
-To start integrating you need an api key. Please contact the team(discord, twitter, telegram) to get an api key. w
+To start integrating you need an api key. Please contact the team(discord, twitter, telegram) to get an api key.
 
 There are three different types of portfoilios in brokkrs: Token based(aka Strategies), DCA, Indexes.
 
@@ -29,9 +31,10 @@ BrokkrTokenIssuingService // Token based
 ```
 
 To use this package first you need to initialize it.
+
 ```const brokkrSdk = new BrokkrClientSdk({apiToken: <YOUR-API-KEY>, chain: Chain.AVALANCHE, publicNodeUrl?: <PUBLIC-NODE-URL>});```
 
-The SDK contains two important domain. 
+The SDK contains two important domain.
 - portfolio
 - user
 
