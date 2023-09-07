@@ -42,7 +42,7 @@ export class BrokkrApiService {
   }
 
   public async fetchPortfolioHisoricalData(portfolioAddress: string, timeRange: TimeRange = 'all') {
-    const response = await axios.get<PriceTimeRangeData>(
+    const response = await this.brokkrApiService.get<PriceTimeRangeData>(
       `${PORTFOLIO_PATH}/${portfolioAddress}/prices`,
       {
         params: {
@@ -88,7 +88,7 @@ export class BrokkrApiService {
   }
 
   public async fetchUserOverallOverview(userAddress: string): Promise<OverallUserInvestmentMetrics> {
-    const response = await axios.get<OverallUserInvestmentMetrics>(
+    const response = await this.brokkrApiService.get<OverallUserInvestmentMetrics>(
       `${USER_PATH}/${userAddress}`,
     );
 
