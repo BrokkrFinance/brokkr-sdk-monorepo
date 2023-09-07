@@ -79,7 +79,7 @@ export class BrokkrApiService {
     return convertBigNumberToNumber(calculatedResult, outputTokenDecimals);
   }
 
-  public async fetchPortfolioUserHolding(portfolioAddress: string, userAddress: string): Promise<UserPortfolioHolding> {
+  public async fetchPortfolioUserHolding(userAddress: string, portfolioAddress: string): Promise<UserPortfolioHolding> {
     const response = await this.brokkrApiService.get<UserPortfolioHolding>(
       `${PORTFOLIO_PATH}/${portfolioAddress}/users/${userAddress}`,
     );

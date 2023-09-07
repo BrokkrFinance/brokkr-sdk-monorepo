@@ -32,7 +32,7 @@ export class BrokkrTokenIssuingService {
     }
 
     public async fetchUserHoldings(userAddress: string) {
-        return this.brokkrApiService.fetchPortfolioUserHolding(this.contractAddress, userAddress);
+        return this.brokkrApiService.fetchPortfolioUserHolding(userAddress, this.contractAddress);
     }
 
     public async fetchPortfolioInfo() {
